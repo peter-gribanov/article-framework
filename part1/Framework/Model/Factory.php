@@ -31,7 +31,8 @@ class Factory {
 	 */
 	public function get($name) {
 		if (!isset($this->models[$name])) {
-			$this->models[$name] = new $name();
+			$class_name = '\Framework\Model\\'.$name;
+			$this->models[$name] = new $class_name();
 		}
 		return $this->models[$name];
 	}

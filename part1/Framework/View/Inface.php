@@ -14,7 +14,6 @@ namespace Framework\View;
  * @package Framework\View
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-
 interface Inface {
 
 	/**
@@ -22,7 +21,7 @@ interface Inface {
 	 * 
 	 * @param Framework\Factory $factory Фабрика
 	 */
-	public function __construct(Framework\Factory $factory);
+	public function __construct(\Framework\Factory $factory);
 
 	/**
 	 * Возвращает отрисованный шаблон

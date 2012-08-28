@@ -8,6 +8,8 @@
 
 namespace Framework\View;
 
+use Framework\Factory;
+
 /**
  * Представление
  * 
@@ -29,7 +31,7 @@ class View implements Inface {
 	 * 
 	 * @param Framework\Factory $factory Фабрика
 	 */
-	public function __construct(Framework\Factory $factory) {
+	public function __construct(Factory $factory) {
 		$this->factory = $factory;
 	}
 
@@ -46,7 +48,7 @@ class View implements Inface {
 		foreach ($templates as $template) {
 			extract($__vars, EXTR_SKIP | EXTR_REFS);
 			ob_start();
-			include $this->factory->getDir().'/templates/'.$template;
+			include $this->factory->getDir().'/ressources/templates/'.$template;
 			$__vars['content'] = ob_get_clean();
 		}
 		return isset($__vars['content']) ? $__vars['content'] : '';

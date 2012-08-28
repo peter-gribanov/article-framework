@@ -8,6 +8,9 @@
 
 namespace Framework;
 
+use Framework\View\View;
+use Framework\View\Inface;
+
 /**
  * Представление
  * 
@@ -45,16 +48,23 @@ class Factory {
 	 */
 	public function __construct($root) {
 		$this->root = $root;
+		// регистрируем автолоадер
+		spl_autoload_register(function ($class) use ($root) {
+			$class_file = $root.'/'.str_replace('\\', '/', $class).'.php';
+			if (is_readable($class_file)) {
+				require_once $class_file;
+			}
+		});
 	}
 
 	/**
 	 * Представление
 	 * 
-	 * @return Framework\View\Inface
+	 * @return Framework\View\View
 	 */
 	public function View() {
-		if (!($this->view instanceof Framework\View\Inface)) {
-			$this->view = new Framework\View\View($factory);
+		if (!($this->view instanceof Inface)) {
+			$this->view = new View($this);
 		}
 		return $this->view;
 	}
@@ -77,7 +87,7 @@ class Factory {
 	 */
 	public function getModel($name = null) {
 		if (!$this->model) {
-			$this->model = new Framework\Model\Factory();
+			$this->model = new Model\Factory();
 		}
 		return $name ? $this->model->get($name) : $this->model;
 	}

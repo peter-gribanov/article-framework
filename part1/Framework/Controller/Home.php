@@ -8,6 +8,8 @@
 
 namespace Framework\Controller;
 
+use Framework\Model\Factory;
+
 /**
  * Добашний пакет
  * 
@@ -29,7 +31,7 @@ class Home {
 	 * 
 	 * @param Framework\Model\Factory $factory Фабрика моделей
 	 */
-	public function __construct(Framework\Model\Factory $factory) {
+	public function __construct(Factory $factory) {
 		$this->factory = $factory;
 	}
 
