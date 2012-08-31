@@ -14,7 +14,7 @@ namespace Framework\View;
  * @package Framework\View
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
-interface Inface {
+interface Iface {
 
 	/**
 	 * Конструктор

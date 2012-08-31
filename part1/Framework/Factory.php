@@ -8,8 +8,8 @@
 
 namespace Framework;
 
-use Framework\View\View;
-use Framework\View\Inface;
+use Framework\View\NativePHP;
+use Framework\View\Iface;
 
 /**
  * Представление
@@ -22,7 +22,7 @@ class Factory {
 	/**
 	 * Представление
 	 * 
-	 * @var Framework\View\Inface
+	 * @var Framework\View\Iface
 	 */
 	private $view;
 
@@ -60,11 +60,11 @@ class Factory {
 	/**
 	 * Представление
 	 * 
-	 * @return Framework\View\View
+	 * @return Framework\View\NativePHP
 	 */
 	public function View() {
-		if (!($this->view instanceof Inface)) {
-			$this->view = new View($this);
+		if (!($this->view instanceof Iface)) {
+			$this->view = new NativePHP($this);
 		}
 		return $this->view;
 	}
