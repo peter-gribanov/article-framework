@@ -18,6 +18,17 @@ class Users {
 
 	public function get($id) {
 		// TODO get data from sql
+		/*$result = mysql_query('
+			SELECT
+				`first`,
+				`last`
+			FROM
+				`users`
+			WHERE
+				`id` = '.intval($id));
+		return mysql_fetch_assoc($result);*/
+
+		// возвращаем данные заглушки вместо реального запроса
 		return array(
 			'first' => 'Arnold',
             'last'  => 'Schwarzenegger'
