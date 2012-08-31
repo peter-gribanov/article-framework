@@ -1,6 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Framework/Factory.php';
-$factory = new \Framework\Factory(dirname(__FILE__));
+require 'framework.php';
+
+$factory = new \Framework\Factory(__DIR__);
 
 $controller = !empty($_GET['controller']) ? $_GET['controller'] : 'Home';
 $action     = !empty($_GET['action'])     ? $_GET['action']     : 'index';
