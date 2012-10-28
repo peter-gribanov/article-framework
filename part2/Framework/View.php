@@ -68,7 +68,7 @@ class View {
 		if (isset(self::$helpers[$name])) {
 			return self::$helpers[$name];
 		}
-		return null;
+		return function ($arguments){};
 	}
 
 	/**
@@ -80,9 +80,7 @@ class View {
 	 * @return mixed
 	 */
 	public static function __callstatic($name, array $arguments = array()) {
-		if ($helper = self::getHelper($name)) {
-			return call_user_func_array($helper, $arguments);
-		}
+		return call_user_func_array(self::getHelper($name), $arguments);
 	}
 
 	/**
