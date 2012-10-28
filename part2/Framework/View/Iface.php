@@ -19,18 +19,37 @@ interface Iface {
 	/**
 	 * Конструктор
 	 * 
-	 * @param Framework\Factory $factory Фабрика
+	 * @param string $path Путь к файлам темплэйтов
 	 */
-	public function __construct(\Framework\Factory $factory);
+	public function __construct($path);
 
 	/**
-	 * Возвращает отрисованный шаблон
-	 * 
-	 * @param string|array $template Шаблон или список шаблонов
-	 * @param array|null   $vars     Данные
-	 * 
-	 * @return string
+	 * Очистить добавленные данные
 	 */
-	public function render($template, array $__vars = array());
+	public function clear();
+
+	/**
+	 * Возвращает список всех установленных переменных
+	 */
+	public function getVars();
+
+	/**
+	 * Присвоение переменных шаблону
+	 *
+	 * Позволяет установить значение к определенному ключу или передать массив пар ключ => значение
+	 *
+	 * @param string|array $spec  Ключ или массив пар ключ => значение
+	 * @param mixed|null   $value Если присваивается значение одной переменной, то через него передается значение переменной
+	 */
+	public function assign($spec, $value = null);
+
+	/**
+	 * Выполнить трансфформацию тэмплэйта
+	 *
+	 * Или выполнить трансформацию тэмплэйта в нутри лэйаутов если передан массив тэмплэйтов.
+	 *
+	 * @param string|array $template Шаблон или список шаблонов
+	 */
+	public function render($template);
 
 }

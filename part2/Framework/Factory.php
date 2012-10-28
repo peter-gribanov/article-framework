@@ -64,7 +64,31 @@ class Factory {
 	 */
 	public function View() {
 		if (!($this->view instanceof Iface)) {
-			$this->view = new NativePHP($this);
+			$this->view = new NativePHP($this->getDir().DIRECTORY_SEPARATOR.'templates', true);
+			// Устанавливаем путь для хэлперов
+			NativePHP::setHelpersPath($this->getDir().DIRECTORY_SEPARATOR.'helpers');
+
+			// установка базовых хелперов
+
+			/**
+			 * Хелпер для строит URL
+			 * 
+			 * @param string $path Отнасительный путь
+			 */
+			NativePHP::setHelper('url', function ($path) {
+				return $_SERVER['HTTP_HOST'].$path; // TODO HTTP_HOST должен браться из реквеста
+			});
+
+			/**
+			 * Хелпер для включения других шаблонов
+			 * 
+			 * @param string|array $template Шаблон
+			 * @param array|null   $vars     Переменные
+			 */
+			$view = $this->view;
+			NativePHP::setHelper('inc', function ($template, array $vars = array()) use ($view) {
+				return $view->assign($vars)->render($template, true);
+			});
 		}
 		return $this->view;
 	}

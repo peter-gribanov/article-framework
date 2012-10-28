@@ -14,4 +14,4 @@ $action_name = '__'.$action;
 $data = $controller->$action_name();
 
 // отрисовка результата
-echo $factory->View()->render('home.tpl', $data);
+echo $factory->View()->assign($data)->render(array('html.tpl','layouts/simple.tpl','home/index.tpl'), true);
