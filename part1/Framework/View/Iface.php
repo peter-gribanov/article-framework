@@ -19,9 +19,9 @@ interface Iface {
 	/**
 	 * Конструктор
 	 * 
-	 * @param Framework\Factory $factory Фабрика
+	 * @param string $path Путь к файлам темплэйтов
 	 */
-	public function __construct(\Framework\Factory $factory);
+	public function __construct($path);
 
 	/**
 	 * Возвращает отрисованный шаблон

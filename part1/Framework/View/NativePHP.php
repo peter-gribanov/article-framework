@@ -19,20 +19,20 @@ use Framework\Factory;
 class NativePHP implements Iface {
 
 	/**
-	 * Фабрика
+	 * Пути к файлам темплэйтов
 	 * 
-	 * @var Framework\Factory
+	 * @var string
 	 */
-	private $factory;
+	private $__path;
 
 
 	/**
 	 * Конструктор
 	 * 
-	 * @param Framework\Factory $factory Фабрика
+	 * @param string $path Путь к файлам темплэйтов
 	 */
-	public function __construct(Factory $factory) {
-		$this->factory = $factory;
+	public function __construct($path) {
+		$this->__path = $path;
 	}
 
 	/**
@@ -46,9 +46,9 @@ class NativePHP implements Iface {
 	public function render($template, array $__vars = array()) {
 		$templates = array_reverse((array)$template);
 		foreach ($templates as $template) {
-			extract($__vars, EXTR_SKIP | EXTR_REFS);
+			extract($__vars, EXTR_SKIP);
 			ob_start();
-			include $this->factory->getDir().'/templates/'.$template;
+			include $this->__path.DIRECTORY_SEPARATOR.$template;
 			$__vars['content'] = ob_get_clean();
 		}
 		return isset($__vars['content']) ? $__vars['content'] : '';

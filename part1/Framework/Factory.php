@@ -64,7 +64,7 @@ class Factory {
 	 */
 	public function View() {
 		if (!($this->view instanceof Iface)) {
-			$this->view = new NativePHP($this);
+			$this->view = new NativePHP($this->getDir().DIRECTORY_SEPARATOR.'templates');
 		}
 		return $this->view;
 	}
