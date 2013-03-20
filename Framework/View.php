@@ -1,17 +1,17 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft;
+namespace Framework;
 
 /**
  * Представление
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class View {
@@ -67,8 +67,8 @@ class View {
 	/**
 	 * Добавляет хелпер
 	 * 
-	 * @param string  $name   Имя хелпера
-	 * @param Closure $helper Хелпер
+	 * @param string   $name   Имя хелпера
+	 * @param \Closure $helper Хелпер
 	 */
 	public static function setHelper($name, \Closure $helper) {
 		self::$helpers[$name] = $helper;

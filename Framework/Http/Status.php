@@ -1,18 +1,18 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft\Http;
+namespace Framework\Http;
 
 
 /**
  * Http статус
  *
- * @package Microsoft\Http
+ * @package Framework\Http
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Status {

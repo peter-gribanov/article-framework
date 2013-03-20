@@ -1,19 +1,19 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft\Response;
+namespace Framework\Response;
 
-use Microsoft\Response\Base as BaseResponse;
+use Framework\Response\Base as BaseResponse;
 
 /**
  * Ответ от вызова метода приложения отправляемый по HTTP(S) протоколу
  *
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 abstract class Http extends BaseResponse {
@@ -31,7 +31,7 @@ abstract class Http extends BaseResponse {
 	 *
 	 * @param array $headers Заголовки
 	 *
-	 * @return \Microsoft\Response\Http
+	 * @return \Framework\Response\Http
 	 */
 	public function addHeaders(array $headers) {
 		foreach ($headers as $name => $value) {
@@ -46,7 +46,7 @@ abstract class Http extends BaseResponse {
 	 * @param string $name  Название заголовка
 	 * @param string $value Значение
 	 *
-	 * @return \Microsoft\Response\Http
+	 * @return \Framework\Response\Http
 	 */
 	public function addHeader($name, $value) {
 		if (is_string($name) && is_string($value)) {

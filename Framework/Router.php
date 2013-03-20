@@ -1,19 +1,19 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft;
+namespace Framework;
 
-use Microsoft\Router\Node;
+use Framework\Router\Node;
 
 /**
  * Роутинг запросов
  *
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Router {
@@ -40,7 +40,7 @@ class Router {
 	 *
 	 * @param string $pattern Паттерн
 	 *
-	 * @return \Microsoft\Router\Node|null
+	 * @return \Framework\Router\Node|null
 	 */
 	public function getNodeByPattern($pattern) {
 		return $this->findNode('pattern', $pattern);
@@ -52,7 +52,7 @@ class Router {
 	 *
 	 * @param string $controller Контроллер
 	 *
-	 * @return \Microsoft\Router\Node|null
+	 * @return \Framework\Router\Node|null
 	 */
 	public function getNodeByController($controller) {
 		return $this->findNode('controller', $controller);
@@ -64,7 +64,7 @@ class Router {
 	 * @param string $field Поле
 	 * @param mixed  $value Значение
 	 *
-	 * @return \Microsoft\Router\Node|null
+	 * @return \Framework\Router\Node|null
 	 */
 	private function findNode($field, $value) {
 		foreach ($this->routing as $node) {

@@ -1,19 +1,19 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft\Response;
+namespace Framework\Response;
 
-use Microsoft\Response\Base as BaseResponse;
+use Framework\Response\Base as BaseResponse;
 
 /**
  * Ответ от приложения направляемый в консоль
  *
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Cli extends BaseResponse {

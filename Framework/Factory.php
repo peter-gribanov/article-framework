@@ -1,21 +1,21 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft;
+namespace Framework;
 
-use Microsoft\API;
-use Microsoft\View;
-use Microsoft\Router;
+use Framework\API;
+use Framework\View;
+use Framework\Router;
 
 /**
  * Райтинг
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Factory {
@@ -23,21 +23,21 @@ class Factory {
 	/**
 	 * Обертка для клиента API
 	 *
-	 * @var \Microsoft\API
+	 * @var \Framework\API
 	 */
 	private $api;
 
 	/**
 	 * Представление
 	 *
-	 * @var \Microsoft\View
+	 * @var \Framework\View
 	 */
 	private $view;
 
 	/**
 	 * Роутер
 	 *
-	 * @var \Microsoft\Router
+	 * @var \Framework\Router
 	 */
 	private $router;
 
@@ -63,7 +63,7 @@ class Factory {
 	/**
 	 * Обертка для клиента API
 	 *
-	 * @return \Microsoft\API
+	 * @return \Framework\API
 	 */
 	public function API() {
 		if (!$this->api) {
@@ -75,7 +75,7 @@ class Factory {
 	/**
 	 * Представление
 	 *
-	 * @return \Microsoft\View
+	 * @return \Framework\View
 	 */
 	public function View() {
 		if (!$this->view) {
@@ -87,7 +87,7 @@ class Factory {
 	/**
 	 * Роутер
 	 *
-	 * @return \Microsoft\Router
+	 * @return \Framework\Router
 	 */
 	public function Router() {
 		return $this->router;

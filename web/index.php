@@ -1,8 +1,8 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
@@ -11,7 +11,7 @@ header('P3P: CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CN
 
 require '../autoload.php';
 
-$app = new \Microsoft\AppCore();
-$app->setRequest(\Microsoft\Request::buildFromGlobal());
+$app = new \Framework\AppCore();
+$app->setRequest(\Framework\Request::buildFromGlobal());
 $response = $app->execute();
 $response->transmit();

@@ -1,18 +1,18 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft;
+namespace Framework;
 
 
 /**
  * Пользовательский запрос
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Request {
@@ -28,7 +28,7 @@ class Request {
 	/**
 	 * Строит запрос из глобальных переменных
 	 *
-	 * @return \Microsoft\Request
+	 * @return \Framework\Request
 	 */
 	static public function buildFromGlobal() {
 		$request = new self();

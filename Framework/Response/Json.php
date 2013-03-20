@@ -1,20 +1,20 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft\Response;
+namespace Framework\Response;
 
-use Microsoft\Response\Http as HttpResponse;
-use Microsoft\Exception;
+use Framework\Response\Http as HttpResponse;
+use Framework\Exception;
 
 /**
  * JSON ответ от вызова метода приложения
  *
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Json extends HttpResponse {
@@ -34,7 +34,7 @@ class Json extends HttpResponse {
 	 *
 	 * @param mixed $new_content Новый контент
 	 *
-	 * @return \Microsoft\Response\Base
+	 * @return \Framework\Response\Base
 	 */
 	public function setContent($new_content) {
 		if ($new_content && is_string($new_content) && json_decode($new_content, true) === null) {

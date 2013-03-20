@@ -1,19 +1,19 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft\Response;
+namespace Framework\Response;
 
-use Microsoft\Response\Http as HttpResponse;
+use Framework\Response\Http as HttpResponse;
 
 /**
  * XML ответ от вызова метода приложения
  *
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Xml extends HttpResponse {

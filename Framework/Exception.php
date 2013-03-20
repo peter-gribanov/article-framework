@@ -1,17 +1,17 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft;
+namespace Framework;
 
 /**
  * Исключение
  * 
- * @package Microsoft\Http
+ * @package Framework\Http
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Exception extends \Exception {

@@ -1,18 +1,18 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft\Router;
+namespace Framework\Router;
 
 
 /**
  * Нода роутинга запросов
  *
- * @package Microsoft\Router
+ * @package Framework\Router
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Node {
@@ -50,7 +50,7 @@ class Node {
 	 */
 	public function getController() {
 		list($controller, ) = explode('::', $this->node['controller']);
-		return '\Microsoft\Controller\\'.$controller;
+		return '\Framework\Controller\\'.$controller;
 	}
 
 	/**

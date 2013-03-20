@@ -1,17 +1,17 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft\Response;
+namespace Framework\Response;
 
 /**
  * Какой-либо ответ от вызова метода приложения пригодный несущий часть данных
  *
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 abstract class Base {
@@ -38,7 +38,7 @@ abstract class Base {
 	 *
 	 * @param string $new_content Новый контент
 	 *
-	 * @return \Microsoft\Response\Base
+	 * @return \Framework\Response\Base
 	 */
 	public function setContent($new_content) {
 		$this->content = $new_content;

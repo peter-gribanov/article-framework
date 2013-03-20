@@ -1,25 +1,25 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft;
+namespace Framework;
 
-use Microsoft\Factory;
-use Microsoft\Request;
-use Microsoft\Http\NotFound;
-use Microsoft\Exception;
-use Microsoft\Router\Node;
-use Microsoft\Http\Status;
-use Microsoft\Response\Base as BaseResponse;
+use Framework\Factory;
+use Framework\Request;
+use Framework\Http\NotFound;
+use Framework\Exception;
+use Framework\Router\Node;
+use Framework\Http\Status;
+use Framework\Response\Base as BaseResponse;
 
 /**
  * Контроллер распределения запросов
  *
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class AppCore {
@@ -27,14 +27,14 @@ class AppCore {
 	/**
 	 * Фабрика
 	 *
-	 * @var \Microsoft\Factory
+	 * @var \Framework\Factory
 	 */
 	private $factory;
 
 	/**
 	 * Запрос
 	 *
-	 * @var \Microsoft\Request
+	 * @var \Framework\Request
 	 */
 	private $request;
 
@@ -61,7 +61,7 @@ class AppCore {
 		$factory = $this->factory;
 		return function (\Exception $e) use ($factory) {
 			$message = $e->getMessage();
-			if ($e instanceof \Microsoft\Http\NotFound) {
+			if ($e instanceof \Framework\Http\NotFound) {
 				$status = new Status(Status::NOT_FOUND);
 			} elseif ($e instanceof \Pro_Api_Exception) {
 				$status = new Status(Status::INTERNAL_SERVER_ERROR);
@@ -101,9 +101,9 @@ class AppCore {
 	/**
 	 * Устанавливает запрос
 	 *
-	 * @param \Microsoft\Request $request Запрос
+	 * @param \Framework\Request $request Запрос
 	 *
-	 * @return \Microsoft\App
+	 * @return \Framework\App
 	 */
 	public function setRequest(Request $request) {
 		$this->request = $request;
@@ -113,9 +113,9 @@ class AppCore {
 	/**
 	 * Выполняет вызов экшена исходя из запроса
 	 *
-	 * @throws \Microsoft\Exception
+	 * @throws \Framework\Exception
 	 *
-	 * @return \Microsoft\Response\Base
+	 * @return \Framework\Response\Base
 	 */
 	public function execute() {
 		if (!($this->request instanceof Request)) {

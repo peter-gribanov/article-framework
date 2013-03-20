@@ -1,22 +1,22 @@
 <?php
 /**
- * Microsoft package
+ * Framework package
  * 
- * @package Microsoft
+ * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Microsoft\Http;
+namespace Framework\Http;
 
-use Microsoft\Http\Status;
+use Framework\Http\Status;
 
 /**
  * Исключение NotFound
  * 
- * @package Microsoft\Http
+ * @package Framework\Http
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class NotFound extends \Microsoft\Exception {
+class NotFound extends \Framework\Exception {
 
 	/**
 	 * Конструктор
