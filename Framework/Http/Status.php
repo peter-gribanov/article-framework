@@ -1,19 +1,19 @@
 <?php
 /**
- * Example PHP Framework
- *
- * @package Framework
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * Microsoft package
+ * 
+ * @package Microsoft
+ * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Framework\Http;
+namespace Microsoft\Http;
 
 
 /**
  * Http статус
  *
- * @package Framework\Http
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * @package Microsoft\Http
+ * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Status {
 

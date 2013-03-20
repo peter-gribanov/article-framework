@@ -1,20 +1,22 @@
 <?php
 /**
- * Example PHP Framework
- *
- * @package Framework
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * Microsoft package
+ * 
+ * @package Microsoft
+ * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Framework\Http;
+namespace Microsoft\Http;
+
+use Microsoft\Http\Status;
 
 /**
  * Исключение NotFound
  * 
- * @package Framework\Http
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * @package Microsoft\Http
+ * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class NotFound extends \Exception {
+class NotFound extends \Microsoft\Exception {
 
 	/**
 	 * Конструктор
@@ -22,7 +24,7 @@ class NotFound extends \Exception {
 	 * @param string|null $message Сообщение
 	 */
 	public function __construct($message = '') {
-		parent::__construct($message, 404);
+		parent::__construct($message, Status::NOT_FOUND);
 	}
 
 }

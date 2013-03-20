@@ -1,19 +1,19 @@
 <?php
 /**
- * Example PHP Framework
- *
- * @package Framework
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * Microsoft package
+ * 
+ * @package Microsoft
+ * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 
-namespace Framework;
+namespace Microsoft;
 
 
 /**
  * Пользовательский запрос
  * 
- * @package Framework
- * @author  Peter Gribanov <info@peter-gribanov.ru>
+ * @package Microsoft
+ * @author  Peter Gribanov <gribanov@professionali.ru>
  */
 class Request {
 
