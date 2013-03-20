@@ -6,7 +6,7 @@
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 
-if (version_compare(phpversion(), '5.3', '<') == true) {
+if (version_compare(PHP_VERSION, '5.3', '<') == true) {
 	exit('Для работы требуется PHP 5.3.x');
 }
 
