@@ -9,12 +9,15 @@
 /**
  * Форматирование даты
  *
- * @param string              $format    Формат
- * @param string|integer|null $timestamp UTM время
+ * @param string  $format    Формат
+ * @param mixed   $timestamp UTM время
  * 
  * @return string
  */
 function helper_date($format, $timestamp = null) {
-	return $timestamp ? date($format, (int)$timestamp) : date($format);
+	if ($timestamp && !is_int($timestamp)) {
+		$timestamp = strtotime($timestamp);
+	}
+	return date($format, ($timestamp ?: time()));
 }
 
