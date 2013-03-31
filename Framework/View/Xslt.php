@@ -1,12 +1,23 @@
 <?php
+/**
+ * Framework package
+ * 
+ * @package Framework
+ * @author  Peter Gribanov <gribanov@professionali.ru>
+ */
+
+namespace Framework\View;
+
+use Framework\View\Iface;
+use Framework\View\Exception;
 
 /**
  * Шаблонизатор XSLT
  *
- * @author  Peter Gribanov
- * @package View
+ * @author  Peter Gribanov <gribanov@professionali.ru>
+ * @package Framework\View
  */
-class View_Xslt implements View_Interface {
+class Xslt implements Iface {
 
 	/**
 	 * Данные для отрисовки в шаблонизаторе
@@ -21,7 +32,7 @@ class View_Xslt implements View_Interface {
 	 *
 	 * @param string $xml Данные
 	 *
-	 * @return View_Xslt
+	 * @return \Framework\View\Xslt
 	 */
 	public function assign($xml) {
 		$this->xml = $xml;
@@ -40,7 +51,7 @@ class View_Xslt implements View_Interface {
 	/**
 	 * Очистить добавленные данные
 	 *
-	 * @return View_Xslt
+	 * @return \Framework\View\Xslt
 	 */
 	public function clear() {
 		$this->xml = '';
@@ -50,20 +61,22 @@ class View_Xslt implements View_Interface {
 	/**
 	 * Возвращает отрисованный шаблон
 	 *
+	 * @throws \Framework\View\Exception
+	 *
 	 * @param string $xslt Шаблон
 	 *
 	 * @return string
 	 */
 	public function render($xslt) {
 		if (extension_loaded('xslcache')) {
-			$xslt = new xsltCache();
+			$xslt = new \xsltCache();
 			$xslt->importStyleSheet(TPL_DIR.'/'.$xslt);
 		} else {
-			$xslt = new xsltProcessor();
+			$xslt = new \xsltProcessor();
 			$xslt->importStyleSheet(DomDocument::load(TPL_DIR.'/'.$xslt));
 		}
 
-		$doc = new DOMDocument();
+		$doc = new \DOMDocument();
 		if (!$doc->loadXML($this->xml)) {
 			throw new Exception('Некорректный формат XML данных');
 		}

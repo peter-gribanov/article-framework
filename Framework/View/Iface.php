@@ -1,19 +1,27 @@
 <?php
+/**
+ * Framework package
+ * 
+ * @package Framework
+ * @author  Peter Gribanov <gribanov@professionali.ru>
+ */
+
+namespace Framework\View;
 
 /**
  * Интерфейс шаблонизатеров
  *
- * @author Peter Gribanov
- * @package View
+ * @author  Peter Gribanov <gribanov@professionali.ru>
+ * @package Framework\View
  */
-interface View_Interface {
+interface Iface {
 
 	/**
 	 * Присвоение переменных шаблону
 	 *
 	 * @param mixed $vars Данные
 	 *
-	 * @return View_Interfase
+	 * @return \Framework\View\Iface
 	 */
 	public function assign($vars);
 
@@ -27,7 +35,7 @@ interface View_Interface {
 	/**
 	 * Очистить добавленные данные
 	 *
-	 * @return View_Interfase
+	 * @return \Framework\View\Iface
 	 */
 	public function clear();
 

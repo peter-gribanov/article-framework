@@ -1,14 +1,25 @@
 <?php
+/**
+ * Framework package
+ * 
+ * @package Framework
+ * @author  Peter Gribanov <gribanov@professionali.ru>
+ */
+
+namespace Framework\View\Php;
+
+use Framework\View\Php;
+use Framework\View\Exception;
 
 /**
  * Утилита для хелперов
  *
  * Скрывает некоторую внутреннюю реализацию работы шаблонизатора
  *
- * @author Peter Gribanov
- * @package View\Php
+ * @author  Peter Gribanov <gribanov@professionali.ru>
+ * @package Framework\View\Php
  */
-class View_Php_HelperUtility {
+class HelperUtility {
 
 	/**
 	 * Стек шаблонов
@@ -22,9 +33,16 @@ class View_Php_HelperUtility {
 	/**
 	 * Шаблонизатор
 	 *
-	 * @var View_Php
+	 * @var \Framework\View\Php
 	 */
 	private $view;
+
+	/**
+	 * Список блоков которые не должны перезаписываться
+	 *
+	 * @var array
+	 */
+	private $not_overwrite = array();
 
 	/**
 	 * Имя сохраняемого блока
@@ -44,9 +62,9 @@ class View_Php_HelperUtility {
 	/**
 	 * Конструктор
 	 *
-	 * @param View_Php $view Шаблонизатор
+	 * @param \Framework\View\Php $view Шаблонизатор
 	 */
-	public function __construct(View_Php $view) {
+	public function __construct(Php $view) {
 		$this->view = $view;
 	}
 
@@ -80,7 +98,7 @@ class View_Php_HelperUtility {
 	/**
 	 * Очищает стек шаблонов
 	 *
-	 * @return View_Php_HelperUtility
+	 * @return \Framework\View\Php\HelperUtility
 	 */
 	public function clear() {
 		$this->tpl_stack = array();
@@ -97,12 +115,16 @@ class View_Php_HelperUtility {
 	/**
 	 * Начинает буферизацию вывода
 	 *
-	 * @param string $name Имя блока
+	 * @param string  $name      Имя блока
+	 * @param boolean $overwrite Перезаписывать блок
 	 */
-	public function startBuffering($name) {
+	public function startBuffering($name, $overwrite = true) {
 		if ($name) {
 			if ($this->block) {
 				throw new Exception('Буферизация уже начата в блоке '.$this->block);
+			}
+			if (!$overwrite) {
+				$this->not_overwrite[] = $name;
 			}
 			$this->buffer = ob_get_clean();
 			$this->block = $name;
@@ -115,10 +137,19 @@ class View_Php_HelperUtility {
 	 */
 	public function endBuffering() {
 		if ($this->block) {
-			$this->view->assign(array($this->block => ob_get_clean()));
-			echo $this->buffer;
-			$this->buffer = $this->name = '';
+			$buffer = ob_get_clean();
 			ob_start();
+			echo $this->buffer;
+			// дописываем в конец предыдущего блока
+			if (in_array($this->block, $this->not_overwrite)) {
+				$buffer .= $this->view->getVar($this->block);
+			}
+			$this->view->assign(array($this->block => $buffer));
+			// если это последний шаблон то выводим его содержимое
+			if (!$this->tpl_stack) {
+				echo $buffer;
+			}
+			$this->block = $this->buffer = '';
 		}
 	}
 
@@ -132,7 +163,7 @@ class View_Php_HelperUtility {
 	}
 
 	/**
-	 * Включение шаблона
+	 * Включение другого шаблона в поток обработки текущего
 	 *
 	 * @param string $template Шаблон
 	 * @param array  $vars     Параметры шаблона
@@ -169,4 +200,5 @@ class View_Php_HelperUtility {
 
 		return $content;
 	}
+
 }
