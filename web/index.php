@@ -9,7 +9,7 @@
 // обход политик IE
 header('P3P: CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
 
-require '../autoload.php';
+require realpath(__DIR__.'/../autoload.php');
 
 $app = new \Framework\AppCore();
 $app->setRequest(\Framework\Request::buildFromGlobal());
