@@ -9,7 +9,10 @@
 
 // автолоадер
 spl_autoload_register(function($name) {
-	$type = strpos($name, 'Interface') === false ? 'class' : 'interface';
+	$type = (
+		strpos($name, 'Interface') === false &&
+		strpos($name, 'Iface') === false
+	) ? 'class' : 'interface';
 	$is = $type.'_exists';
 	$file = __DIR__.'/'.str_replace(array('_', '\\'), '/', $name).'.php';
 	if (is_readable($file)) {
