@@ -59,6 +59,20 @@ class Router {
 	}
 
 	/**
+	 * Везвращает ноду по алиасу
+	 *
+	 * @param string $alias Алиас
+	 *
+	 * @return \Framework\Router\Node|null
+	 */
+	public function getNodeByAlias($alias) {
+		if (isset($this->routing[$alias])) {
+			return new Node($this->routing[$alias], $alias);
+		}
+		return null;
+	}
+
+	/**
 	 * Найти ноду по параметру
 	 *
 	 * @param string $field Поле
@@ -67,9 +81,9 @@ class Router {
 	 * @return \Framework\Router\Node|null
 	 */
 	private function findNode($field, $value) {
-		foreach ($this->routing as $node) {
+		foreach ($this->routing as $alias => $node) {
 			if ($node[$field] == $value) {
-				return new Node($node);
+				return new Node($node, $alias);
 			}
 		}
 		return null;

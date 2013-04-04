@@ -8,6 +8,7 @@
 
 namespace Framework\Http;
 
+use Framework\Http\Http;
 use Framework\Http\Status;
 
 /**
@@ -16,7 +17,7 @@ use Framework\Http\Status;
  * @package Framework\Http
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class NotFound extends \Framework\Exception {
+class NotFound extends Http {
 
 	/**
 	 * Конструктор

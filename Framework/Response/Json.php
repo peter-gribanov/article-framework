@@ -8,7 +8,7 @@
 
 namespace Framework\Response;
 
-use Framework\Response\Http as HttpResponse;
+use Framework\Response\Http;
 use Framework\Exception;
 
 /**
@@ -17,7 +17,15 @@ use Framework\Exception;
  * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class Json extends HttpResponse {
+class Json extends Http {
+
+	/**
+	 * Название ответа
+	 *
+	 * @var string
+	 */
+	const NAME = 'json';
+
 
 	/**
 	 * Установить новый контент и заголовки
@@ -26,7 +34,7 @@ class Json extends HttpResponse {
 	 */
 	public function __construct($data = '') {
 		parent::__construct($data);
-		$this->addHeader('content-type', 'application/json');
+		$this->addHeader('Content-Type', 'application/json');
 	}
 
 	/**
@@ -34,7 +42,7 @@ class Json extends HttpResponse {
 	 *
 	 * @param mixed $new_content Новый контент
 	 *
-	 * @return \Framework\Response\Base
+	 * @return \Framework\Response\Json
 	 */
 	public function setContent($new_content) {
 		if ($new_content && is_string($new_content) && json_decode($new_content, true) === null) {

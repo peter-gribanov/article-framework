@@ -8,9 +8,12 @@
 
 namespace Framework;
 
-use Framework\API;
-use Framework\View;
+use Framework\View\Php as View;
 use Framework\Router;
+use Framework\Request;
+use Framework\Router\URLHelper;
+use Framework\Exception;
+use Framework\Utility\Arr as ArrayUtility;
 
 /**
  * Райтинг
@@ -48,38 +51,54 @@ class Factory {
 	 */
 	private $dir = '';
 
+	/**
+	 * Конфигурации
+	 *
+	 * @var array
+	 */
+	private $config = array();
+
+	/**
+	 * Запрос
+	 *
+	 * @var \Framework\Request
+	 */
+	private $request;
+
+	/**
+	 * URL хелпер
+	 *
+	 * @var \Framework\Router\URLHelper
+	 */
+	private $url_helper;
+
 
 	/**
 	 * Конструктор
 	 *
 	 * @param string $dir     Корневая дирректория
 	 * @param array  $routing Роутинг
+	 * @param array  $config  Конфигурации
 	 */
-	public function __construct($dir, array $routing = array()) {
+	public function __construct($dir, array $routing = array(), array $config = array()) {
 		$this->router = new Router($routing);
 		$this->dir    = $dir;
-	}
-
-	/**
-	 * Обертка для клиента API
-	 *
-	 * @return \Framework\API
-	 */
-	public function API() {
-		if (!$this->api) {
-			$this->api = new API();
-		}
-		return $this->api;
+		$this->config = $config;
 	}
 
 	/**
 	 * Представление
 	 *
-	 * @return \Framework\View
+	 * @return \Framework\View\Iface
 	 */
-	public function View() {
+	public function getView() {
 		if (!$this->view) {
-			$this->view = new View($this->getDir());
+			$this->view = new View(
+				$this->getDir().'/resources/templates',
+				$this->getDir().'/resources/helpers',
+				$this->getURLHelper(),
+				$this->getConfig('debug')
+			);
 		}
 		return $this->view;
 	}
@@ -89,7 +108,7 @@ class Factory {
 	 *
 	 * @return \Framework\Router
 	 */
-	public function Router() {
+	public function getRouter() {
 		return $this->router;
 	}
 
@@ -100,6 +119,66 @@ class Factory {
 	 */
 	public function getDir() {
 		return $this->dir;
+	}
+
+	/**
+	 * Возвращает объект ответа
+	 *
+	 * @param string $present Формат ответа
+	 * @param mixed  $content Контент
+	 *
+	 * @return \Framework\Response\Response
+	 */
+	public function getResponse($present, $content = '') {
+		$classname = '\Framework\Response\\'.ucwords($present);
+		return new $classname($content);
+	}
+
+	/**
+	 * Возвращает параметр из конфигураций
+	 *
+	 * @param string $param Название параметра
+	 *
+	 * @return mixed
+	 */
+	public function getConfig($param) {
+		return ArrayUtility::getByPath($this->config, $param);
+	}
+
+	/**
+	 * Устанавливает запрос
+	 *
+	 * @param \Framework\Request $request Запрос
+	 *
+	 * @return \Framework\Factory
+	 */
+	public function setRequest(Request $request) {
+		$this->request = $request;
+		return $this;
+	}
+
+	/**
+	 * Возвращает запрос
+	 *
+	 * @return \Framework\Request
+	 */
+	public function getRequest() {
+		if (!($this->request instanceof Request)) {
+			throw new Exception('Не установлен запрос');
+		}
+		return $this->request;
+	}
+
+	/**
+	 * Возвращает URL хелпер
+	 *
+	 * @return \Framework\Router\URLHelper
+	 */
+	public function getURLHelper() {
+		if (!($this->url_helper instanceof URLHelper)) {
+			$this->url_helper = new URLHelper($this->getRequest(), $this->getRouter());
+		}
+		return $this->url_helper;
 	}
 
 }

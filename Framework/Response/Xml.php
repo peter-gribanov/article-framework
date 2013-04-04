@@ -8,7 +8,7 @@
 
 namespace Framework\Response;
 
-use Framework\Response\Http as HttpResponse;
+use Framework\Response\Http;
 
 /**
  * XML ответ от вызова метода приложения
@@ -16,7 +16,15 @@ use Framework\Response\Http as HttpResponse;
  * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class Xml extends HttpResponse {
+class Xml extends Http {
+
+	/**
+	 * Название ответа
+	 *
+	 * @var string
+	 */
+	const NAME = 'xml';
+
 
 	/**
 	 * Установить новый контент и заголовки
@@ -25,7 +33,7 @@ class Xml extends HttpResponse {
 	 */
 	public function __construct($data = '') {
 		parent::__construct($data);
-		$this->addHeader('content-type', 'application/xml');
+		$this->addHeader('Content-Type', 'application/xml');
 	}
 
 }

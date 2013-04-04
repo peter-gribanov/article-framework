@@ -8,7 +8,7 @@
 
 namespace Framework\Response;
 
-use Framework\Response\Http as HttpResponse;
+use Framework\Response\Http;
 
 /**
  * HTML ответ от вызова метода приложения
@@ -16,7 +16,15 @@ use Framework\Response\Http as HttpResponse;
  * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class Http extends HttpResponse {
+class Html extends Http {
+
+	/**
+	 * Название ответа
+	 *
+	 * @var string
+	 */
+	const NAME = 'html';
+
 
 	/**
 	 * Установить новый контент и заголовки
@@ -25,7 +33,7 @@ class Http extends HttpResponse {
 	 */
 	public function __construct($data = '') {
 		parent::__construct($data);
-		$this->addHeader('content-type', 'text/html');
+		$this->addHeader('Content-Type', 'text/html');
 	}
 
 }

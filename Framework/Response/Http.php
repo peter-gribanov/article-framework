@@ -8,23 +8,49 @@
 
 namespace Framework\Response;
 
-use Framework\Response\Base as BaseResponse;
-
+use Framework\Response\Response;
+use Framework\Http\Status;
 /**
  * Ответ от вызова метода приложения отправляемый по HTTP(S) протоколу
  *
  * @package Framework
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-abstract class Http extends BaseResponse {
+abstract class Http extends Response {
+
+	/**
+	 * Название ответа
+	 *
+	 * @var string
+	 */
+	const NAME = 'http';
+
 
 	/**
 	 * Список заголовков
 	 *
 	 * @var array
 	 */
-	private $headers = array('content-type' => 'text/plain');
+	private $headers = array();
 
+	/**
+	 * Статус ответа
+	 *
+	 * @var \Framework\Http\Status
+	 */
+	private $status;
+
+
+	/**
+	 * Установить новый контент
+	 *
+	 * @param string $data Новый контент
+	 */
+	public function __construct($data = '') {
+		parent::__construct($data);
+		$this->setStatus(new Status());
+		$this->addHeader('Content-Type', 'text/plain');
+	}
 
 	/**
 	 * Добавляет заголовоки
@@ -43,15 +69,16 @@ abstract class Http extends BaseResponse {
 	/**
 	 * Добавляет заголовок
 	 *
-	 * @param string $name  Название заголовка
-	 * @param string $value Значение
+	 * @param string                        $name  Название заголовка
+	 * @param string|\Framework\Http\Status $value Значение
 	 *
 	 * @return \Framework\Response\Http
 	 */
 	public function addHeader($name, $value) {
-		if (is_string($name) && is_string($value)) {
-			$name = strtolower(str_replace('_', '-', $name));
-			$this->headers[$name] = $value;
+		if ($value instanceof Status) {
+			$this->setStatus($value);
+		} elseif (is_string($name) && is_string($value)) {
+			$this->headers[strtolower(str_replace('_', '-', $name))] = $name.': '.$value;
 		}
 		return $this;
 	}
@@ -66,14 +93,37 @@ abstract class Http extends BaseResponse {
 	}
 
 	/**
+	 * Устанавливает статус ответа
+	 *
+	 * @param \Framework\Http\Status $status Статус
+	 *
+	 * @return \Framework\Response\Http
+	 */
+	public function setStatus(Status $status) {
+		$this->status = $status;
+		return $this;
+	}
+
+	/**
+	 * Возвращает статус ответа
+	 *
+	 * @return \Framework\Http\Status
+	 */
+	public function getStatus() {
+		return $this->status;
+	}
+
+	/**
 	 * Отправляет ответ клиенту
 	 */
 	public function transmit() {
-		foreach ($this->headers as $name => $value) {
-			header($name.': '.$value);
+		if (!headers_sent()) {
+			header($this->status->getStringStatus());
+			foreach ($this->headers as $value) {
+				header($value);
+			}
 		}
 		echo $this->getContent();
-		exit;
 	}
 
 }

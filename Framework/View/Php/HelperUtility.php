@@ -10,6 +10,7 @@ namespace Framework\View\Php;
 
 use Framework\View\Php;
 use Framework\View\Exception;
+use Framework\Router\URLHelper;
 
 /**
  * Утилита для хелперов
@@ -38,6 +39,13 @@ class HelperUtility {
 	private $view;
 
 	/**
+	 * URL хелпер
+	 *
+	 * @var \Framework\Router\URLHelper
+	 */
+	private $url_helper;
+
+	/**
 	 * Список блоков которые не должны перезаписываться
 	 *
 	 * @var array
@@ -62,10 +70,12 @@ class HelperUtility {
 	/**
 	 * Конструктор
 	 *
-	 * @param \Framework\View\Php $view Шаблонизатор
+	 * @param \Framework\View\Php         $view       Шаблонизатор
+	 * @param \Framework\Router\URLHelper $url_helper URL хелпер
 	 */
-	public function __construct(Php $view) {
-		$this->view = $view;
+	public function __construct(Php $view, URLHelper $url_helper) {
+		$this->view       = $view;
+		$this->url_helper = $url_helper;
 	}
 
 	/**
@@ -199,6 +209,15 @@ class HelperUtility {
 		$this->tpl_stack = $tpl_stack;
 
 		return $content;
+	}
+
+	/**
+	 * Возвращает URL хелпер
+	 *
+	 * @return \Framework\Router\URLHelper
+	 */
+	public function getURLHelper() {
+		return $this->url_helper;
 	}
 
 }

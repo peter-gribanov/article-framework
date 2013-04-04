@@ -10,11 +10,12 @@ namespace Framework;
 
 use Framework\Factory;
 use Framework\Request;
+use Framework\Http\Http;
 use Framework\Http\NotFound;
 use Framework\Exception;
 use Framework\Router\Node;
 use Framework\Http\Status;
-use Framework\Response\Base as BaseResponse;
+use Framework\Response\Response;
 
 /**
  * Контроллер распределения запросов
@@ -32,24 +33,28 @@ class AppCore {
 	private $factory;
 
 	/**
-	 * Запрос
+	 * Последняя загруженная нода
 	 *
-	 * @var \Framework\Request
+	 * @var \Framework\Router\Node
 	 */
-	private $request;
+	private $last_node;
 
 
 	/**
 	 * Конструктор
 	 */
 	public function __construct() {
-		set_exception_handler($this->getExceptionHandler());
-		set_error_handler($this->getErrorHandler());
-		session_start();
+		$root = dirname(__DIR__);
 		$this->factory = new Factory(
-			dirname(__DIR__),
-			require dirname(__DIR__).'/routing.php'
+			$root,
+			require $root.'/configs/routing.php',
+			require $root.'/configs/global.php'
 		);
+		error_reporting($this->factory->getConfig('debug') ? E_ALL | E_STRICT : 0);
+		set_exception_handler($this->getExceptionHandler());
+		//set_error_handler($this->getErrorHandler());
+		register_shutdown_function($this->getShutdownHandler());
+		session_start();
 	}
 
 	/**
@@ -59,30 +64,50 @@ class AppCore {
 	 */
 	private function getExceptionHandler() {
 		$factory = $this->factory;
-		return function (\Exception $e) use ($factory) {
-			$message = $e->getMessage();
-			if ($e instanceof \Framework\Http\NotFound) {
-				$status = new Status(Status::NOT_FOUND);
-			} elseif ($e instanceof \Pro_Api_Exception) {
-				$status = new Status(Status::INTERNAL_SERVER_ERROR);
-				$message = $e->getDescription();
-			} else {
-				$status = new Status(Status::INTERNAL_SERVER_ERROR);
+		$node    = $this->last_node;
+		return function (\Exception $e) use ($factory, $node) {
+			// определяем формат ответа
+			$present = Response::getDefaultResponse();
+			if ($node instanceof Node) { // есть нода
+				$present = $node->getPresent();
+			} elseif (PHP_SAPI != 'cli') {
+				// пытаемся определить формат из запроса. иначе отдаем по умолчанию
+				try {
+					$url = $factory->getRequest()->server('REQUEST_URI', '/');
+					if (($ext = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION)) && Response::isSupported($ext)) {
+						$present = $ext;
+					}
+				} catch (\Exception $e) {}
 			}
 
-			try {
-				header($status->getStringStatus());
-				$error = Status::getString($status->getCode());
-				$content = $factory->View()
-					->render(array('html.html.tpl', 'error.html.tpl'), array(
-						'page_title' => 'Ошибка: '.$error,
-						'error'      => $error,
-						'message'    => $message,
-						'code'       => $e->getCode() ?: Status::INTERNAL_SERVER_ERROR
-					));
-			} catch (\Exception $e) {}
+			$response = $factory->getResponse($present, $e->getMessage().($factory->getConfig('debug') ? "\n".$e->getTraceAsString() : ''));
 
-			echo $content ?: 'Error in template';
+			if (PHP_SAPI != 'cli') {
+				if ($e instanceof NotFound) {
+					$status = new Status($e->getCode());
+				} else {
+					$status = new Status(Status::INTERNAL_SERVER_ERROR);
+				}
+	
+				// пытаемся отрендерить шаблон для ошибки
+				try {
+					$content = $factory->getView()
+						->assign(array(
+							'code'    => $e->getCode() ?: Status::INTERNAL_SERVER_ERROR,
+							'error'   => Status::getString($status->getCode()),
+							'message' => $e->getMessage(),
+							'trace'   => $e->getTraceAsString(),
+							'debug'   => $factory->getConfig('debug'),
+						))
+						->render('errors/default.'.$present.'.tpl', true);
+				} catch (\Exception $e) {
+					$content = $e->getMessage().($factory->getConfig('debug') ? "\n".$e->getTraceAsString() : '');
+					$status  = new Status(Status::INTERNAL_SERVER_ERROR);
+				}
+				$response->setContent($content)->setStatus($status);
+			}
+
+			$response->transmit();
 			exit(1);
 		};
 	}
@@ -93,8 +118,23 @@ class AppCore {
 	 * @return \Closure
 	 */
 	private function getErrorHandler() {
+		$exception_handler = $this->getExceptionHandler();
 		return function ($errno, $errstr, $errfile, $errline) {
 			throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+		};
+	}
+
+	/**
+	 * Возвращает обработчик завершения работы
+	 *
+	 * @return \Closure
+	 */
+	private function getShutdownHandler() {
+		$exception_handler = $this->getExceptionHandler();
+		return function () use ($exception_handler) {
+			if ($error = error_get_last()) {
+				$exception_handler(new \ErrorException($error['message'], $error['type'], 0, $error['file'], $error['line']));
+			}
 		};
 	}
 
@@ -103,10 +143,10 @@ class AppCore {
 	 *
 	 * @param \Framework\Request $request Запрос
 	 *
-	 * @return \Framework\App
+	 * @return \Framework\AppCore
 	 */
 	public function setRequest(Request $request) {
-		$this->request = $request;
+		$this->factory->setRequest($request);
 		return $this;
 	}
 
@@ -118,43 +158,36 @@ class AppCore {
 	 * @return \Framework\Response\Base
 	 */
 	public function execute() {
-		if (!($this->request instanceof Request)) {
-			throw new Exception('Не установлен запрос');
-		}
+		$request = $this->factory->getRequest();
 
-		// авторезация приложения
-		if ($code = $this->request->get('code')) {
-			$this->factory->API()->authorize($code);
-		}
-
-		// проверка авторезированности приложения
-		$this->factory->API()->checkAuthoriz();
-
-		$node = $this->factory->Router()->getNodeByPattern($this->request->server('REQUEST_URI', '/'));
+		$node = $this->factory->getRouter()->getNodeByPattern($request->server('REQUEST_URI', '/'));
 
 		if (!($node instanceof Node)) {
-			throw new NotFound('Страница не найдена');
+			throw new NotFound('Страница для запроса "'.$request->server('REQUEST_URI', '/').'" не найдена');
 		}
+		$this->last_node = $node;
 
 		// инициализация контроллера и вызов экшена
 		$controller = $node->getController();
-		$controller = new $controller();
+		$controller = new $controller($node, $this->factory, $request);
 
 		if (!is_callable(array($controller, ($action = $node->getAction())))) {
-			throw new NotFound('Страница не найдена');
+			throw new NotFound('Невозможно выполнить действие "'.$action.'" для контроллера "'.get_class($controller).'"');
 		}
 		$result = $controller->$action();
 
-		// экшен вернул данные которые. надо отрендерить
+		// экшен вернул данные которые надо отрендерить
 		if (is_array($result)) {
-			// TODO требуется реализация
-			//$node->getPresent();
-			//$node->getTemplates();
+			$result = $this->factory->getView()->assign($result)->render($node->getTemplate(), true);
 		}
 
 		// экшен вернул отрендереный шаблон. надо сформировать ответ
-		if (!($result instanceof BaseResponse)) {
-			// TODO требуется реализация
+		if (is_string($result)) {
+			$result = $this->factory->getResponse($node->getPresent(), $result);
+		}
+
+		if (!($result instanceof Response)) {
+			throw new Exception('Не сформирован ответ');
 		}
 
 		return $result;

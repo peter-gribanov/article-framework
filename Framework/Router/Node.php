@@ -8,6 +8,8 @@
 
 namespace Framework\Router;
 
+use Framework\Response\Response;
+
 
 /**
  * Нода роутинга запросов
@@ -18,20 +20,78 @@ namespace Framework\Router;
 class Node {
 
 	/**
-	 * Описание ноды
+	 * Псевдоним ноды
 	 *
-	 * @var array
+	 * @var string
 	 */
-	private $node = array();
+	private $alias = '';
+
+	/**
+	 * Паттерн
+	 *
+	 * @var string
+	 */
+	private $pattern = '/';
+
+	/**
+	 * Контроллер
+	 *
+	 * @var string
+	 */
+	private $controller = '';
+
+	/**
+	 * Экшен
+	 *
+	 * @var string
+	 */
+	private $action = '';
+
+	/**
+	 * Формат представления
+	 *
+	 * @var string
+	 */
+	private $present = '';
+
+	/**
+	 * Шаблон
+	 *
+	 * @var string
+	 */
+	private $template = '';
 
 
 	/**
 	 * Конструктор
 	 *
-	 * @param array $node Описание ноды
+	 * @param array  $node  Описание ноды
+	 * @param string $alias Псевдоним ноды
 	 */
-	public function __construct(array $node = array()) {
-		$this->node = $node;
+	public function __construct(array $node = array(), $alias) {
+		$this->alias   = $alias;
+		$this->pattern = $node['pattern'];
+
+		// формат представления
+		if (!empty($node['present']) && Response::isSupported($node['present'])) {
+			$this->present = $node['present'];
+		} elseif (!empty($node['pattern']) && ($ext = pathinfo($node['pattern'], PATHINFO_EXTENSION)) && Response::isSupported($ext)) {
+			$this->present = $ext;
+		} else {
+			$this->present = Response::getDefaultResponse();
+		}
+
+		// контроллер и экшен
+		list($controller, $action) = explode('::', $node['controller']);
+		$this->controller = '\Framework\Controller\\'.$controller;
+		$this->action     = $action.'Action';
+
+		// шаблон
+		if (!empty($node['template'])) {
+			$this->template = $node['template'];
+		} else {
+			$this->template = $controller.'/'.$action.'.'.$this->getPresent().'.tpl';
+		}
 	}
 
 	/**
@@ -40,7 +100,7 @@ class Node {
 	 * @return string
 	 */
 	public function getPattern() {
-		return $this->node['pattern'];
+		return $this->pattern;
 	}
 
 	/**
@@ -49,8 +109,7 @@ class Node {
 	 * @return string
 	 */
 	public function getController() {
-		list($controller, ) = explode('::', $this->node['controller']);
-		return '\Framework\Controller\\'.$controller;
+		return $this->controller;
 	}
 
 	/**
@@ -59,8 +118,7 @@ class Node {
 	 * @return string
 	 */
 	public function getAction() {
-		list(, $action) = explode('::', $this->node['controller']);
-		return $action.'Action';
+		return $this->action;
 	}
 
 	/**
@@ -69,20 +127,25 @@ class Node {
 	 * @return string
 	 */
 	public function getPresent() {
-		return !empty($this->node['present']) ? $this->node['present'] : 'html';
+		return $this->present;
 	}
 
 	/**
-	 * Везвращает список шаблонов для форматирования вывода
+	 * Везвращает шаблон для форматирования вывода
 	 *
-	 * @return array
+	 * @return string
 	 */
-	public function getTemplates() {
-		if (!empty($this->node['templates'])) {
-			return (array)$this->node['templates'];
-		}
-		list($controller, $action) = explode('::', $this->node['controller']);
-		return array(strtolower($controller).'/'.strtolower($action).'.'.$this->getPresent().'.tpl');
+	public function getTemplate() {
+		return $this->template;
+	}
+
+	/**
+	 * Везвращает псевдоним ноды
+	 *
+	 * @return string
+	 */
+	public function getAlias() {
+		return $this->alias;
 	}
 
 }

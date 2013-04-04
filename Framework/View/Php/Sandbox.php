@@ -38,8 +38,8 @@ class Sandbox {
 		extract($__vars);
 		ob_start();
 		try {
-			include ($__file);
-		} catch (Exception $e) {
+			include $__file;
+		} catch (\Exception $e) {
 			ob_end_clean();
 			throw $e;
 		}

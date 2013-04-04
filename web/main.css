@@ -1,0 +1,163 @@
+body {
+	padding: 0;
+	margin: 0;
+	width: 960px;
+	height: 870px;
+	color: #2f2f2f;
+	background: #000000 url(/images/bg.jpg) no-repeat 0 0;
+	font-family: 'Proxima Nova', Arial, Helvetica, sans-serif;
+	font-size: 13px;
+}
+h2 {
+	margin: 0;
+	padding: 0 0 8px;
+	font-size: 13px;
+	font-weight: normal;
+}
+a {
+	color: #f96800;
+	text-decoration: none;
+}
+p {
+	margin: 0;
+	padding: 0;
+}
+
+/**
+ * No news
+ */
+.b-no-news {
+	top: 471px;
+	left: 80px;
+	position: absolute;
+	font-weight: bold;
+	color: #f96800;
+	font-size: 180%;
+	border-top: 19px #52b1d7 solid;
+	background-color: #fff;
+	width: 600px;
+	padding: 120px 100px;
+	text-align: center;
+}
+
+/**
+ * Buttons
+ */
+header a {
+	top: 390px;
+	position: absolute;
+	height: 30px;
+	display: block;
+	overflow: hidden;
+}
+.b-subscribe {
+	left: 460px;
+	width: 155px;
+	text-indent: 155px;
+}
+.b-recommend {
+	left: 722px;
+	width: 173px;
+	text-indent: 173px;
+}
+
+/**
+ * Navigation
+ */
+nav a {
+	top: 430px;
+	position: absolute;
+	width: 60px;
+	height: 370px;
+	display: block;
+	overflow: hidden;
+	text-indent: 60px;
+}
+nav .b-disabled {
+	cursor: default;
+}
+.b-previous {
+	left: 2px;
+}
+.b-next {
+	left: 898px;
+}
+
+/**
+ * News
+ */
+.b-frame {
+	top: 430px;
+	left: 60px;
+	position: absolute;
+	width: 840px;
+	height: 380px;
+	overflow: hidden;
+}
+.b-scroll {
+	width: 1000%;
+}
+.b-page {
+	width: 840px;
+	margin-right: 200px;
+	float: left;
+}
+.b-news-item {
+	width: 250px;
+	height: 143px;
+	border-top: 19px #52b1d7 solid;
+	background-color: #fff;
+	margin: 0 5px 10px;
+	padding: 9px 10px;
+	float: left;
+}
+/**
+ * Invite
+ */
+.b-user {
+	width: 760px;
+	margin: 0 auto 3px;
+	border-top: 6px #52b1d7 solid;
+	background-color: #fff;
+}
+.b-user .b-u-avatar,
+.b-user .b-u-name {
+	float: left;
+}
+.b-user .b-control {
+	margin-right: 30px;
+	float: right;
+}
+.b-user,
+.b-user .b-u-avatar img,
+.b-user .b-u-name,
+.b-user .b-control {
+	height: 60px;
+	line-height: 60px;
+	padding: 0;
+	display: block;
+}
+.b-user .b-u-avatar img {
+	width: 60px;
+}
+.b-user .b-u-name {
+	margin-left: 20px;
+}
+.b-frame > .b-control {
+	width: 760px;
+	clear: both;
+	margin: auto;
+}
+.b-f-control {
+	float: left;
+}
+.b-select-control {
+	float: right;
+}
+
+/**
+ * Fatal error
+ */
+.b-fatal-error {
+	color: #fff;
+}
