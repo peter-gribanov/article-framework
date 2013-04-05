@@ -10,17 +10,19 @@
 
 
 // автолоадер
-spl_autoload_register(function($name) {
-	$type = (
-		strpos($name, 'Interface') === false &&
-		strpos($name, 'Iface') === false
-	) ? 'class' : 'interface';
-	$is = $type.'_exists';
-	$file = __DIR__.'/'.str_replace(array('_', '\\'), '/', $name).'.php';
-	if (is_readable($file)) {
-		include_once $file;
-		if (!$is($name, false)) {
-			throw new Exception('В файле "'.$file.'" '.($type=='class' ? 'класс' : 'интерфейс').' "'.$name.'" не найден');
-		}
+spl_autoload_register(function($class_name) {
+	$file_name = str_replace(array('_', '\\'), DIRECTORY_SEPARATOR, $class_name).'.php';
+
+	if (!is_readable(__DIR__.DIRECTORY_SEPARATOR.$file_name)) {
+		throw new Exception(sprintf('Файл "%s" для "%s" не найден', $file_name, $class_name));
 	}
-});
+
+	$result = require $file_name;
+	if ($result === false) {
+		throw new Exception(sprintf('Не удалось подключить файл "%s" для класса "%s"', $file_name, $class_name));
+	}
+
+	if (!class_exists($class_name, false) && !interface_exists($class_name, false)) {
+		throw new Exception(sprintf('В файле "%s" не найден "%s"', $file_name, $class_name));
+	}
+}, true, true);
