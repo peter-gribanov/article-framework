@@ -1,9 +1,3 @@
-/**
- * Microsoft package
- * 
- * @package Microsoft
- * @author  Peter Gribanov <gribanov@professionali.ru>
- */
 var Microsoft = {
 
 	// количество страниц
