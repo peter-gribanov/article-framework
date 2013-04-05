@@ -90,8 +90,7 @@ class URLHelper {
 	 * @return string
 	 */
 	public function getUrl($alias, array $params = array()) {
-		$protocol = $this->request->isSecureRequest() ? 'https' : 'http';
-		return $protocol.'://'.$this->request->server('HTTP_HOST').$this->getPath($alias, $params);
+		return $this->request->getRootUrl().$this->getPath($alias, $params);
 	}
 
 }

@@ -8,6 +8,7 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
+
 /**
  * Возвращает относительный путь к узлу
  *

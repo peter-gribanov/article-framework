@@ -50,21 +50,21 @@ class Php implements Iface {
 	 *
 	 * @var array
 	 */
-	private static $helpers = array();
+	static private $helpers = array();
 
 	/**
 	 * Путь к хелперам
 	 *
 	 * @var string
 	 */
-	private static $helpers_path = '';
+	static private $helpers_path = '';
 
 	/**
 	 * Утилита для хелперов
 	 *
 	 * @var \Framework\View\Php\HelperUtility
 	 */
-	private static $utility;
+	static private $utility;
 
 
 	/**
@@ -196,7 +196,7 @@ class Php implements Iface {
 	 * @param string   $name   Имя хелпера
 	 * @param \Closure $helper Хелпер
 	 */
-	public static function setHelper($name, \Closure $helper) {
+	static public function setHelper($name, \Closure $helper) {
 		self::$helpers[$name] = $helper;
 	}
 
@@ -207,7 +207,7 @@ class Php implements Iface {
 	 *
 	 * @return \Closure
 	 */
-	public static function getHelper($name) {
+	static public function getHelper($name) {
 		if (!isset(self::$helpers[$name])) {
 			$file = self::$helpers_path.DIRECTORY_SEPARATOR.$name.'.php';
 

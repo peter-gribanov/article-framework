@@ -162,7 +162,8 @@ class AppCore {
 	public function execute() {
 		$request = $this->factory->getRequest();
 
-		$node = $this->factory->getRouter()->getNodeByPattern($request->server('REQUEST_URI', '/'));
+		$path = parse_url($request->server('REQUEST_URI', '/'), PHP_URL_PATH);
+		$node = $this->factory->getRouter()->getNodeByPattern($path);
 
 		if (!($node instanceof Node)) {
 			throw new NotFound('Страница для запроса "'.$request->server('REQUEST_URI', '/').'" не найдена');

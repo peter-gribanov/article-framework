@@ -36,7 +36,7 @@ class Sandbox {
 	 *
 	 * @return string
 	 */
-	public static function __render($__file, $__vars) {
+	static public function __render($__file, $__vars) {
 		extract($__vars);
 		ob_start();
 		try {
@@ -56,7 +56,7 @@ class Sandbox {
 	 *
 	 * @return mixed
 	 */
-	public static function __callStatic($name, array $arguments = array()) {
+	static public function __callStatic($name, array $arguments = array()) {
 		return call_user_func_array(Php::getHelper($name), $arguments);
 	}
 

@@ -10,6 +10,7 @@
 
 namespace Framework;
 
+use Framework\Utility\Arr as ArrayUtility;
 
 /**
  * Пользовательский запрос
@@ -25,6 +26,13 @@ class Request {
 	 * @var array
 	 */
 	private $input = array();
+
+	/**
+	 * Путь к корневой дирректории
+	 *
+	 * @var string
+	 */
+	private $root_url = '';
 
 
 	/**
@@ -59,10 +67,7 @@ class Request {
 		if (!$this->isInputed($from)) {
 			return $default;
 		}
-		if (is_null($name)) {
-			return $this->input[$from];
-		}
-		return isset($this->input[$from][$name]) ? $this->input[$from][$name] : $default;
+		return ArrayUtility::get($this->input[$from], $name, $default);
 	}
 
 	/**
@@ -198,6 +203,18 @@ class Request {
 	 */
 	public function getRequestMethod() {
 		return $this->server('REQUEST_METHOD', 'GET');
+	}
+
+	/**
+	 * Возвращает путь к корневой дирректории
+	 *
+	 * @return string
+	 */
+	public function getRootUrl() {
+		if (!$this->root_url) {
+			$this->root_url = ($this->isSecureRequest() ? 'https' : 'http').'://'.$this->server('HTTP_HOST', 'localhost');
+		}
+		return $this->root_url;
 	}
 
 }

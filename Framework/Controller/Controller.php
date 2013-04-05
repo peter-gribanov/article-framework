@@ -23,7 +23,7 @@ use Framework\Router\URLHelper;
  * @package Framework\Controller
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class Controller {
+abstract class Controller {
 
 	/**
 	 * Нода

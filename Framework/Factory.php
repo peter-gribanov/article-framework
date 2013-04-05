@@ -139,12 +139,13 @@ class Factory {
 	/**
 	 * Возвращает параметр из конфигураций
 	 *
-	 * @param string $param Название параметра
+	 * @param string     $param   Название параметра
+	 * @param mixed|null $default Значение по умолчанию
 	 *
 	 * @return mixed
 	 */
-	public function getConfig($param) {
-		return ArrayUtility::getByPath($this->config, $param);
+	public function getConfig($param, $default = null) {
+		return ArrayUtility::getByPath($this->config, $param, $default);
 	}
 
 	/**

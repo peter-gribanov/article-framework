@@ -11,7 +11,7 @@
 namespace Framework\Controller;
 
 
-use Framework\Controller\Controller;
+use Framework\Controller\Microsoft;
 
 /**
  * Главный контроллер
@@ -19,7 +19,7 @@ use Framework\Controller\Controller;
  * @package Framework\Controller
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class Home extends Controller {
+class Home extends Microsoft {
 
 	/**
 	 * Количество записей на странице
@@ -77,6 +77,15 @@ class Home extends Controller {
 
 		//p($page);
 		//p($list_page);
+		return array();
+	}
+
+	/**
+	 * Обновление списка новостей
+	 *
+	 * @return array
+	 */
+	public function updateAction() {
 		return array();
 	}
 

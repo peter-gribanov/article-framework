@@ -13,4 +13,9 @@ return array(
 	'rss' => array(
 		'channel' => 'http://slon.ru.feedsportal.com/c/34610/f/632866/index.rss',
 	),
+	'api' => array(
+		'code'   => 'pnxkehia70kpt2u3',
+		'secret' => 's4tjsszrbzkqcjqyvi08ukwnuyt3vw4g',
+		'can_authorize' => false,
+	)
 );
