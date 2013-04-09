@@ -31,21 +31,7 @@ class Home extends Controller {
 	 *
 	 * @var integer
 	 */
-	const PER_PAGE_NEWS = 6;
-
-	/**
-	 * Количество пользователей на странице
-	 *
-	 * @var integer
-	 */
-	const PER_PAGE_USERS = 5;
-
-	/**
-	 * Максимальное число страниц с пользователями
-	 *
-	 * @var integer
-	 */
-	const MAX_USER_PAGES = 5;
+	const PER_PAGE = 6;
 
 	/**
 	 * Время кэширования по умолчанию
@@ -100,6 +86,15 @@ class Home extends Controller {
 	}
 
 	/**
+	 * Возвращает представление
+	 *
+	 * @return \Microsoft\Api
+	 */
+	private function getApi() {
+		return $this->api;
+	}
+
+	/**
 	 * Главная
 	 *
 	 * @return array
@@ -111,8 +106,8 @@ class Home extends Controller {
 		$items = $this->getNews();
 
 		// группируем по страницам и удаляем полузаполненные страницы
-		$pages = array_chunk($items, self::PER_PAGE_NEWS);
-		$pages = array_slice($pages, 0, round(count($items)/self::PER_PAGE_NEWS));
+		$pages = array_chunk($items, self::PER_PAGE);
+		$pages = array_slice($pages, 0, round(count($items)/self::PER_PAGE));
 
 		return array(
 			'pages' => $pages,
@@ -128,25 +123,20 @@ class Home extends Controller {
 		// проверка авторезированности приложения
 		$this->api->checkAuthoriz();
 
-		// отправляем приглашения
-		if ($ids = $this->getRequest()->post('id')) {
-			list($current) = $this->api->fetch(Api::METHOD_GET_CURRENT);
-			$status = $this->api->fetch(Api::METHOD_INVITE_NEW, array(
-				'to' => array_keys($ids),
-				'text' => $this->getView()->assign($current)->render('Home/invite/message.html.tpl'),
-				'type' => 'application',
-			));
-		}
-		
-		$users = array();
-		$ids = $this->api->fetch(Api::METHOD_CAN_INVITE);
-		if ($ids['users']) {
-			// выводить не более 5 страниц
-			$ids['users'] = array_slice($ids['users'], 0, self::PER_PAGE_USERS*self::MAX_USER_PAGES);
-			$users = $this->api->fetch(Api::METHOD_USER_GET, array('ids' => $ids['users']));
-		}
+		$items = array_fill(0, 10, 'item');
 
-		return array('users' => $users);
+		$per_page = 4;
+		$total = count($items);
+		$page = 5;
+
+		$start = $page-floor(($per_page-1)/2);
+		$start = $start > 1 ? $start : 1;
+		$start = $total - $start + 1 < $per_page && $total - $start >= 1 ? $total-$per_page+1 : $start;
+		$list_page  = array_keys(array_fill($start, $per_page, ''));
+
+		//p($page);
+		//p($list_page);
+		return array();
 	}
 
 	/**
