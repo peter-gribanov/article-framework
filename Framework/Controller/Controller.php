@@ -106,14 +106,12 @@ abstract class Controller {
 	}
 
 	/**
-	 * Возвращает параметр из конфигураций
+	 * Возвращает фабрику
 	 *
-	 * @param string $param Название параметра
-	 *
-	 * @return mixed
+	 * @return \Framework\Factory
 	 */
-	public function getConfig($param) {
-		return $this->factory->getConfig($param);
+	public function getFactory() {
+		return $this->factory;
 	}
 
 }

@@ -34,6 +34,20 @@ class Request {
 	 */
 	private $root_url = '';
 
+	/**
+	 * Запрос выполнен из консоли
+	 *
+	 * @var boolean
+	 */
+	private $is_cli = false;
+
+	/**
+	 * Путь запроса
+	 *
+	 * @var string
+	 */
+	private $path = '';
+
 
 	/**
 	 * Строит запрос из глобальных переменных
@@ -42,14 +56,27 @@ class Request {
 	 */
 	static public function buildFromGlobal() {
 		$request = new self();
-		$request->input = array(
-			'get'    =>  $_GET,
-			'post'   =>  $_POST,
-			'files'  =>  $_FILES,
-			'cookie' =>  $_COOKIE,
-			'server' =>  $_SERVER,
-			'env'    =>  $_ENV,
-		);
+
+		if ($request->is_cli = PHP_SAPI == 'cli') {
+			$arg = $request->arguments($_SERVER['argv']);
+			$request->input = array(
+				'server' =>  $_SERVER,
+				'env'    =>  $_ENV,
+				'arg'    =>  $arg,
+			);
+			$request->path = isset($arg['input'][1]) ? $arg['input'][1] : '';
+		} else {
+			$request->input = array(
+				'get'    =>  $_GET,
+				'post'   =>  $_POST,
+				'files'  =>  $_FILES,
+				'cookie' =>  $_COOKIE,
+				'server' =>  $_SERVER,
+				'env'    =>  $_ENV,
+			);
+			$path = parse_url($request->server('REQUEST_URI', '/'), PHP_URL_PATH);
+			$request->path = $request->server('PATH_INFO', $path);
+		}
 		return $request;
 	}
 
@@ -92,6 +119,51 @@ class Request {
 	 */
 	private function isInputed($var) {
 		return array_key_exists($var, $this->input);
+	}
+
+	/**
+	 * Распарсить аргументы коммандной строки
+	 *
+	 * $php myscript.php arg1 -arg2=val2 --arg3=arg3 -arg4 --arg5 -arg6=false
+	 * Результат:
+	 * Array (
+	 *     [input] => Array (
+	 *             [0] => myscript.php
+	 *             [1] => arg1
+	 *             )
+	 *     [arg2] => val2
+	 *     [arg3] => arg3
+	 *     [arg4] => true
+	 *     [arg5] => true
+	 *     [arg5] => false
+	 *     )
+	 *
+	 * @param array $arguments Массив аргументов
+	 *
+	 * @return array
+	 */
+	private function arguments(array $arguments = array()) {
+		$ret = array();
+		foreach ($arguments as $arg) {
+			if (preg_match('/^-{1,2}([^\s=]+)=?(.*)$/us', $arg, $matches)) {
+				$key = $matches[1];
+				switch ($matches[2]) {
+					case '':
+					case 'true':
+						$arg = true;
+						break;
+					case 'false':
+						$arg = false;
+						break;
+					default:
+						$arg = trim($matches[2], '\'"');
+				}
+				$ret[$key] = $arg;
+			} else {
+				$ret['input'][] = $arg;
+			}
+		}
+		return $ret;
 	}
 
 	/**
@@ -215,6 +287,24 @@ class Request {
 			$this->root_url = ($this->isSecureRequest() ? 'https' : 'http').'://'.$this->server('HTTP_HOST', 'localhost');
 		}
 		return $this->root_url;
+	}
+
+	/**
+	 * Запрос выполнен из консоли
+	 *
+	 * @return boolean
+	 */
+	public function isCli() {
+		return $this->is_cli;
+	}
+
+	/**
+	 * Возвращает путь запроса
+	 *
+	 * @return string
+	 */
+	public function getPath() {
+		return $this->path;
 	}
 
 }

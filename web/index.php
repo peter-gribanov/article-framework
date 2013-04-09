@@ -10,9 +10,14 @@
 
 require dirname(__DIR__).'/autoload.php';
 
+$request = \Framework\Request::buildFromGlobal();
 $app = new \Framework\AppCore();
-$app->setRequest(\Framework\Request::buildFromGlobal());
+$app->setRequest($request);
 $response = $app->execute();
+
 // обход политик IE
-$response->addHeader('P3P', 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
+if (!$request->isCli()) {
+	$response->addHeader('P3P', 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
+}
+
 $response->transmit();

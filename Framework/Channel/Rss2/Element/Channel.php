@@ -83,13 +83,14 @@ class Channel extends Element {
 	/**
 	 * Возвращает список элементов ленты
 	 *
-	 * @ return array [\Framework\Channel\Rss2\Element\Item]
-	 * @return multitype:\Framework\Channel\Rss2\Element\Item
+	 * @return array [\Framework\Channel\Rss2\Element\Item]
 	 */
 	public function getItems() {
 		if (!$this->items) {
-			foreach ($this->element->children() as $item) {
-				$this->items[] = new Item($item);
+			foreach ($this->element->children() as $name => $item) {
+				if ($name == 'item') {
+					$this->items[] = new Item($item);
+				}
 			}
 		}
 		return $this->items;

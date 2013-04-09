@@ -128,7 +128,7 @@ class Api {
 				header('Location: '.$this->client->getAuthenticationUrl($this->root_url), true, 301);
 				exit;
 			} else {
-				throw new Exception('Приложение не авторезированно');
+				throw new \Exception('Приложение не авторезированно');
 			}
 		} elseif ($this->client->isExpiresAccessToken()) {
 			$this->client->refreshAccessToken();
@@ -156,7 +156,7 @@ class Api {
 	 */
 	public function fetch($method, $params = array()) {
 		if (!$this->client->getAccessToken()) {
-			throw new Exception('Необходимо авторезироваться');
+			throw new \Exception('Необходимо авторезироваться');
 		}
 
 		try {
@@ -187,7 +187,7 @@ class Api {
 	 */
 	private function buildPath($method) {
 		if (!in_array($method, $this->methods)) {
-			throw new Exception('Неизвестный метод');
+			throw new \Exception('Неизвестный метод');
 		}
 		return \Pro_Api_Client::API_HOST.'/v'.self::USE_API_VERSION.$method;
 	}

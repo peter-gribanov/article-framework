@@ -51,6 +51,26 @@ class Value {
 	}
 
 	/**
+	 * Определяет существует ли атрибут
+	 *
+	 * @param string $name Название атрибута
+	 *
+	 * @return booelan
+	 */
+	public function __isset($name) {
+		return isset($this->element->$name);
+	}
+
+	/**
+	 * Возвращает значение
+	 *
+	 * @return string
+	 */
+	public function getValue() {
+		return (string)$this;
+	}
+
+	/**
 	 * Возвращает значение элемента
 	 *
 	 * @return string

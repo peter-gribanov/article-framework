@@ -53,8 +53,7 @@ class Json extends Http {
 				throw new Exception($this->getError());
 			}
 		}
-		$this->content = $new_content;
-		return $this;
+		return parent::setContent($new_content);
 	}
 
 	/**

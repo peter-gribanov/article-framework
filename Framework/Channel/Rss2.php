@@ -36,7 +36,7 @@ class Rss2 extends Channel {
 	 * @return array [\Framework\Channel\Rss2\Element\Item]
 	 */
 	public function getResources() {
-		return $this->getChannelInfo('item', array());
+		return $this->getChannelInfo()->getItems();
 	}
 
 

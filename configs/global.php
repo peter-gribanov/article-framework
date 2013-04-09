@@ -16,6 +16,6 @@ return array(
 	'api' => array(
 		'code'   => 'pnxkehia70kpt2u3',
 		'secret' => 's4tjsszrbzkqcjqyvi08ukwnuyt3vw4g',
-		'can_authorize' => false,
+		'can_authorize' => true,
 	)
 );

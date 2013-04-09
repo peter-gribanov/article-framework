@@ -59,4 +59,15 @@ abstract class Element {
 		}
 	}
 
+	/**
+	 * Определяет существует ли параметр
+	 *
+	 * @param string $name Название параметра
+	 *
+	 * @return booelan
+	 */
+	public function __isset($name) {
+		return isset($this->element->$name);
+	}
+
 }

@@ -10,6 +10,8 @@
 
 namespace Framework;
 
+use Framework\Response\Json;
+
 use Framework\Factory;
 use Framework\Request;
 use Framework\Http\Http;
@@ -18,6 +20,7 @@ use Framework\Exception;
 use Framework\Router\Node;
 use Framework\Http\Status;
 use Framework\Response\Response;
+use Framework\Response\Json as JsonResponse;
 
 /**
  * Контроллер распределения запросов
@@ -90,21 +93,26 @@ class AppCore {
 				} else {
 					$status = new Status(Status::INTERNAL_SERVER_ERROR);
 				}
-	
-				// пытаемся отрендерить шаблон для ошибки
-				try {
-					$content = $factory->getView()
-						->assign(array(
-							'code'    => $e->getCode() ?: Status::INTERNAL_SERVER_ERROR,
-							'error'   => Status::getString($status->getCode()),
-							'message' => $e->getMessage(),
-							'trace'   => $e->getTraceAsString(),
-							'debug'   => $factory->getConfig('debug'),
-						))
-						->render('errors/default.'.$present.'.tpl', true);
-				} catch (\Exception $e) {
-					$content = $e->getMessage().($factory->getConfig('debug') ? "\n".$e->getTraceAsString() : '');
-					$status  = new Status(Status::INTERNAL_SERVER_ERROR);
+
+				// описание ошибки
+				$data = array(
+					'code'    => $e->getCode() ?: Status::INTERNAL_SERVER_ERROR,
+					'error'   => Status::getString($status->getCode()),
+					'message' => $e->getMessage(),
+					'trace'   => $e->getTraceAsString(),
+					'debug'   => $factory->getConfig('debug'),
+				);
+
+				if ($present == JsonResponse::NAME) {
+					$content = json_encode($data);
+				} else {
+					// пытаемся отрендерить шаблон для ошибки
+					try {
+						$content = $factory->getView()->assign($data)->render('errors/default.'.$present.'.tpl', true);
+					} catch (\Exception $e) {
+						$content = $e->getMessage().($factory->getConfig('debug') ? "\n".$e->getTraceAsString() : '');
+						$status  = new Status(Status::INTERNAL_SERVER_ERROR);
+					}
 				}
 				$response->setContent($content)->setStatus($status);
 			}
@@ -162,11 +170,10 @@ class AppCore {
 	public function execute() {
 		$request = $this->factory->getRequest();
 
-		$path = parse_url($request->server('REQUEST_URI', '/'), PHP_URL_PATH);
-		$node = $this->factory->getRouter()->getNodeByPattern($path);
+		$node = $this->factory->getRouter()->getNodeByPattern($request->getPath());
 
 		if (!($node instanceof Node)) {
-			throw new NotFound('Страница для запроса "'.$request->server('REQUEST_URI', '/').'" не найдена');
+			throw new NotFound('Страница для запроса "'.$request->getPath().'" не найдена');
 		}
 		$this->last_node = $node;
 
@@ -180,8 +187,12 @@ class AppCore {
 		$result = $controller->$action();
 
 		// экшен вернул данные которые надо отрендерить
-		if (is_array($result)) {
-			$result = $this->factory->getView()->assign($result)->render($node->getTemplate(), true);
+		if (is_array($result) && !$request->isCli()) {
+			if ($node->getPresent() == JsonResponse::NAME) {
+				$result = json_encode($result);
+			} else {
+				$result = $this->factory->getView()->assign($result)->render($node->getTemplate(), true);
+			}
 		}
 
 		// экшен вернул отрендереный шаблон. надо сформировать ответ

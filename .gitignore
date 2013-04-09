@@ -1,3 +1,7 @@
+# Framework #
+#############
+cache/*
+
 # Eclipse files #
 #################
 .buildpath
