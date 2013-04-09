@@ -11,11 +11,7 @@
 namespace Framework\Controller;
 
 
-use Framework\Controller\Controller;
-use Framework\Router\Node;
-use Framework\Factory;
-use Framework\Request;
-use Microsoft\Api;
+use Framework\Controller\Microsoft;
 use Framework\Channel\Rss2;
 
 /**
@@ -24,7 +20,7 @@ use Framework\Channel\Rss2;
  * @package Framework\Controller
  * @author  Peter Gribanov <gribanov@professionali.ru>
  */
-class Home extends Controller {
+class Home extends Microsoft {
 
 	/**
 	 * Количество записей на странице
@@ -56,53 +52,11 @@ class Home extends Controller {
 
 
 	/**
-	 * API адаптор
-	 *
-	 * @var \Microsoft\Api
-	 */
-	private $api;
-
-
-	/**
-	 * Конструктор
-	 *
-	 * @param \Framework\Router\Node $node    Нода
-	 * @param \Framework\Factory     $factory Фабрика
-	 * @param \Framework\Request     $request Запрос
-	 */
-	public function __construct(Node $node, Factory $factory, Request $request) {
-		parent::__construct($node, $factory, $request);
-		$this->api = new Api(
-			$factory->getConfig('api.code', ''),
-			$factory->getConfig('api.secret', ''),
-			$request->getRootUrl(),
-			$factory->getConfig('api.can_authorize', false)
-		);
-
-		// авторезация приложения
-		if ($code = $request->get('code')) {
-			$this->api->authorize($code);
-		}
-	}
-
-	/**
-	 * Возвращает представление
-	 *
-	 * @return \Microsoft\Api
-	 */
-	private function getApi() {
-		return $this->api;
-	}
-
-	/**
 	 * Главная
 	 *
 	 * @return array
 	 */
 	public function indexAction() {
-		// проверка авторезированности приложения
-		$this->api->checkAuthoriz();
-
 		$items = $this->getNews();
 
 		// группируем по страницам и удаляем полузаполненные страницы
@@ -120,9 +74,6 @@ class Home extends Controller {
 	 * @return array
 	 */
 	public function inviteAction() {
-		// проверка авторезированности приложения
-		$this->api->checkAuthoriz();
-
 		$items = array_fill(0, 10, 'item');
 
 		$per_page = 4;
@@ -163,30 +114,6 @@ class Home extends Controller {
 		}
 
 		return $news;
-	}
-
-	/**
-	 * Обновление списка новостей через консоль
-	 *
-	 * @return array
-	 */
-	public function updateCliAction() {
-		$news = $this->updateAction();
-		return "Update complete\nAdded ".count($news)." items\n";
-	}
-
-	/**
-	 * Определет нужно ли обновлять ленту
-	 *
-	 * @return boolean
-	 */
-	public function needUpdateAction() {
-		$file = $this->getFactory()->getDir().'/cache/'.self::CACHE_ACCESS_FILE;
-		if (file_exists($file)) {
-			$params = (array)include $file;
-			return $params['access']+$params['ttl'] < time();
-		}
-		return false;
 	}
 
 	/**

@@ -170,10 +170,11 @@ class AppCore {
 	public function execute() {
 		$request = $this->factory->getRequest();
 
-		$node = $this->factory->getRouter()->getNodeByPattern($request->getPath());
+		$path = parse_url($request->server('REQUEST_URI', '/'), PHP_URL_PATH);
+		$node = $this->factory->getRouter()->getNodeByPattern($path);
 
 		if (!($node instanceof Node)) {
-			throw new NotFound('Страница для запроса "'.$request->getPath().'" не найдена');
+			throw new NotFound('Страница для запроса "'.$request->server('REQUEST_URI', '/').'" не найдена');
 		}
 		$this->last_node = $node;
 
@@ -187,7 +188,7 @@ class AppCore {
 		$result = $controller->$action();
 
 		// экшен вернул данные которые надо отрендерить
-		if (is_array($result) && !$request->isCli()) {
+		if (is_array($result)) {
 			if ($node->getPresent() == JsonResponse::NAME) {
 				$result = json_encode($result);
 			} else {

@@ -20,14 +20,9 @@ return array(
 		'controller' => 'Home::invite',
 		'present'    => 'html'
 	),
-	'home_update' => array(
+	'home_invite' => array(
 		'pattern'    => '/update.json',
 		'controller' => 'Home::update',
 		'present'    => 'json'
-	),
-	'home_update_cli' => array(
-		'pattern'    => 'update',
-		'controller' => 'Home::updateCli',
-		'present'    => 'cli'
 	),
 );
