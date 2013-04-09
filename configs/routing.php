@@ -20,4 +20,9 @@ return array(
 		'controller' => 'Home::invite',
 		'present'    => 'html'
 	),
+	'home_invite' => array(
+		'pattern'    => '/update.html',
+		'controller' => 'Home::update',
+		'present'    => 'html'
+	),
 );

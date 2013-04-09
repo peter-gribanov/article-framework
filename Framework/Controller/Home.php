@@ -12,6 +12,7 @@ namespace Framework\Controller;
 
 
 use Framework\Controller\Microsoft;
+use Framework\Channel\Rss2;
 
 /**
  * Главный контроллер
@@ -86,6 +87,15 @@ class Home extends Microsoft {
 	 * @return array
 	 */
 	public function updateAction() {
+		$rss = new Rss2();
+		$rss->setChannel($this->getConfig('channel.rss'));
+		$info = $rss->getChannelInfo();
+		$items = $rss->getResources();
+
+		/* @var $item \Framework\Channel\Rss2\Element\Item */
+		//$item = $items[0];
+		//$item->;
+
 		return array();
 	}
 

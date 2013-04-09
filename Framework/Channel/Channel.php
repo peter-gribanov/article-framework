@@ -10,6 +10,8 @@
 
 namespace Framework\Channel;
 
+use Framework\Exception;
+
 /**
  * Поставщик ресурсов
  *
@@ -93,6 +95,16 @@ abstract class Channel {
 	abstract public function getResources();
 
 	/**
+	 * Возвращает информацию о канале
+	 *
+	 * @param string|null $param   Название параметра
+	 * @param string|null $default Значение по умолчанию
+	 *
+	 * @return array
+	 */
+	abstract public function getChannelInfo($param = null, $default = null);
+
+	/**
 	 * Возвращает контент с удаленного ресурса
 	 *
 	 * @return string
@@ -119,7 +131,11 @@ abstract class Channel {
 			$this->setLastModified($this->getLastModified());
 
 		} else { // произошла ошибка
-			$e = new Exception(curl_error($ch), curl_errno($ch));
+			if ($result === false) {
+				$e = new Exception(curl_error($ch), curl_errno($ch));
+			} else {
+				$e = new Exception('Не удалось получить данные', curl_getinfo($ch, CURLINFO_HTTP_CODE));
+			}
 			curl_close($ch);
 			throw $e;
 		}

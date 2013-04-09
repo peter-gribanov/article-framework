@@ -10,5 +10,5 @@
 <?self::assign('page_title', 'Ошибка: '.$error)?>
 <div class="b-fatal-error">
 	<h1><?=$error?></h1>
-	<p><?=$message?></p>
+	<p><?=$code?>: <?=$message?></p>
 </div>

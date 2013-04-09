@@ -12,6 +12,7 @@ namespace Framework\Channel;
 
 use Framework\Channel\Channel;
 use Framework\Exception;
+use Framework\Channel\Rss2\Element\Channel as ChannelElement;
 
 /**
  * Поставщик новостей RSS 2.0
@@ -24,56 +25,48 @@ class Rss2 extends Channel {
 	/**
 	 * Загруженные ресурсы
 	 *
-	 * @var SimpleXMLElement
+	 * @var \Framework\Channel\Rss2\Element\Channel
 	 */
 	private $resource;
-
-	/**
-	 * Список ресурсов
-	 *
-	 * @var array
-	 */
-	private $items = array();
 
 
 	/**
 	 * Возвращает список ресурсов
 	 *
-	 * @return array
+	 * @return array [\Framework\Channel\Rss2\Element\Item]
 	 */
 	public function getResources() {
-		if (!$this->items) {
-			// читаем контент
-			if (!($this->resource instanceof SimpleXMLElement)) {
-				// если контента нет возвращаем пустой массив
-				if (!($content = $this->getRemoteContent())) {
-					return array();
-				}
-				$this->resource = simplexml_load_string($content);
-				if (!($this->resource instanceof SimpleXMLElement)) {
-					throw new Exception('Не удалось разобрать ответ от канала '.$this->getChannel());
-				}
-			}
-			foreach ($this->resource->channel->item as $item) {
-				$this->items[] = array(
-					'guid'        => (string)$item->guid,
-					'title'       => (string)$item->title,
-					'link'        => (string)$item->link,
-					'description' => (string)$item->description,
-					'pubDate'     => (string)$item->pubDate,
-				);
-			}
-		}
-		return $this->items;
+		return $this->getChannelInfo('item', array());
 	}
 
+
 	/**
-	 * Возвращает интервал доступа к каналу
+	 * Возвращает информацию о канале
 	 *
-	 * @return integer
+	 * @param string|null $param   Название параметра
+	 * @param string|null $default Значение по умолчанию
+	 *
+	 * @return \Framework\Channel\Rss2\Element\Channel
 	 */
-	public function getTtl() {
-		return $this->resource && isset($this->resource->channel->ttl) ? (string)$this->resource->channel->ttl : 0;
+	public function getChannelInfo($param = null, $default = null) {
+		// читает и парсит канал
+		if (!($this->resource instanceof ChannelElement)) {
+			// если контента нет возвращаем пустой массив
+			if (!($content = $this->getRemoteContent())) {
+				return array();
+			}
+			$xml = simplexml_load_string($content);
+			if (!($xml instanceof \SimpleXMLElement)) {
+				throw new Exception('Не удалось разобрать ответ от канала '.$this->getChannel());
+			}
+			$this->resource = new ChannelElement($xml->channel);
+		}
+
+		// возвращаем весь список параметров
+		if (!$param) {
+			return $this->resource;
+		}
+		return isset($this->resource->$param) ? $this->resource->$param : $default;
 	}
 
 	/**
